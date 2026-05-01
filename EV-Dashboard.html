@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Thai Automotive Industry Analysis · 2020–2024</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff;
+    --bg-sec: #f5f5f3;
+    --bg-ter: #eeede9;
+    --text: #1a1a18;
+    --text-sec: #6b6b67;
+    --border: rgba(0,0,0,0.1);
+    --border-med: rgba(0,0,0,0.18);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --blue: #378ADD;
+    --blue-dark: #185FA5;
+    --blue-light: #E6F1FB;
+    --teal: #1D9E75;
+    --teal-dark: #0F6E56;
+    --teal-light: #E1F5EE;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --coral: #993C1D;
+    --coral-light: #FAECE7;
+    --purple: #534AB7;
+    --pink: #993556;
+    --pink-light: #FBEAF0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1c;
+      --bg-sec: #2a2a28;
+      --bg-ter: #232321;
+      --text: #f0efe9;
+      --text-sec: #9a9a94;
+      --border: rgba(255,255,255,0.1);
+      --border-med: rgba(255,255,255,0.18);
+      --blue-light: #0c2d4a;
+      --teal-light: #052e22;
+      --amber-light: #2e1f05;
+      --coral-light: #2e1108;
+      --pink-light: #2e0e1a;
+    }
+  }
+
+  body { background: var(--bg-ter); color: var(--text); font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.6; }
+
+  .page { max-width: 900px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+
+  /* Header */
+  .header { margin-bottom: 2rem; padding-bottom: 1.25rem; border-bottom: 0.5px solid var(--border-med); }
+  .header-top { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+  .header-title { font-size: 22px; font-weight: 500; color: var(--text); }
+  .header-sub { font-size: 13px; color: var(--text-sec); margin-top: 4px; }
+  .badge { display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 999px; background: var(--teal-light); color: var(--teal-dark); font-weight: 500; }
+
+  /* Metric grid */
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1.75rem; }
+  .metric-card { background: var(--bg-sec); border-radius: var(--radius-md); padding: 0.9rem 1rem; }
+  .metric-label { font-size: 11px; color: var(--text-sec); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .metric-value { font-size: 24px; font-weight: 500; color: var(--text); line-height: 1.1; }
+  .metric-sub { font-size: 11px; color: var(--text-sec); margin-top: 3px; }
+
+  /* Section */
+  .section-label { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 0.75rem; }
+
+  /* Cards */
+  .card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem 1.25rem; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; }
+  .card-mb { margin-bottom: 1.25rem; }
+
+  /* Legend */
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; font-size: 12px; color: var(--text-sec); }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* Chart wrapper */
+  .chart-wrap { position: relative; width: 100%; }
+
+  /* Tabs */
+  .tab-row { display: flex; gap: 4px; margin-bottom: 0.9rem; }
+  .tab-btn { font-size: 12px; padding: 5px 13px; border-radius: var(--radius-md); border: 0.5px solid var(--border-med); background: transparent; color: var(--text-sec); cursor: pointer; font-family: inherit; transition: background 0.15s; }
+  .tab-btn.active { background: var(--bg-sec); color: var(--text); font-weight: 500; }
+  .tab-btn:hover { background: var(--bg-sec); }
+
+  /* Card header flex */
+  .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 8px; }
+
+  /* Brand table */
+  .brand-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .brand-table th { color: var(--text-sec); font-weight: 500; text-align: left; padding: 5px 8px; border-bottom: 0.5px solid var(--border); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .brand-table td { padding: 7px 8px; border-bottom: 0.5px solid var(--border); color: var(--text); vertical-align: middle; }
+  .seg-badge { font-size: 10px; padding: 2px 7px; border-radius: 999px; }
+  .bar-inline { height: 5px; border-radius: 3px; display: inline-block; vertical-align: middle; margin-left: 6px; }
+
+  /* Two-col insight */
+  .insight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.25rem; }
+  .insight-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.1rem; }
+  .insight-header { display: flex; align-items: center; gap: 9px; margin-bottom: 7px; }
+  .insight-icon { width: 30px; height: 30px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .insight-label { font-size: 13px; font-weight: 500; color: var(--text); }
+  .insight-body { font-size: 12px; color: var(--text-sec); line-height: 1.65; }
+
+  /* Pills */
+  .pill { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 999px; margin-right: 3px; }
+  .pill-teal { background: var(--teal-light); color: var(--teal-dark); }
+  .pill-blue { background: var(--blue-light); color: var(--blue-dark); }
+  .pill-amber { background: var(--amber-light); color: var(--amber); }
+  .pill-coral { background: var(--coral-light); color: var(--coral); }
+
+  /* Policy list */
+  .policy-list { list-style: none; }
+  .policy-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid var(--border); }
+  .policy-item:last-child { border-bottom: none; }
+  .policy-num { font-size: 20px; font-weight: 500; color: var(--text); min-width: 32px; line-height: 1.2; }
+  .policy-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+  .policy-desc { font-size: 12px; color: var(--text-sec); line-height: 1.55; }
+
+  /* Footer */
+  .footer { text-align: center; font-size: 11px; color: var(--text-sec); margin-top: 2rem; padding-top: 1rem; border-top: 0.5px solid var(--border); }
+
+  @media (max-width: 560px) {
+    .two-col, .insight-grid { grid-template-columns: 1fr; }
+    .header-top { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <h1 class="header-title">Thai Automotive Industry Analysis</h1>
+        <p class="header-sub">General market dynamics vs. EV adoption · 2020–2024</p>
+      </div>
+      <span class="badge">Final Project · Chalita</span>
+    </div>
+  </div>
+
+  <!-- Metric cards -->
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-label">Total market 2024</div>
+      <div class="metric-value">810K</div>
+      <div class="metric-sub">units registered</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">EV segment CAGR</div>
+      <div class="metric-value">~80%</div>
+      <div class="metric-sub">2020–2024 growth</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Top general brand</div>
+      <div class="metric-value">Toyota</div>
+      <div class="metric-sub">~39.3% segment share</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Top EV brand</div>
+      <div class="metric-value">BYD</div>
+      <div class="metric-sub">~33.3% EV share</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Charging stations</div>
+      <div class="metric-value">450</div>
+      <div class="metric-sub">2024 · up from 50 in 2020</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Household debt / GDP</div>
+      <div class="metric-value">91.5%</div>
+      <div class="metric-sub">key demand suppressor</div>
+    </div>
+  </div>
+
+  <!-- Registration & Growth charts -->
+  <div class="two-col">
+    <div class="card">
+      <div class="section-label">Annual registrations by segment</div>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-swatch" style="background:#378ADD"></span>General (ICE)</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#1D9E75"></span>EV (BEV/PHEV)</span>
+      </div>
+      <div class="chart-wrap" style="height:200px">
+        <canvas id="regChart" role="img" aria-label="Line chart showing annual registrations 2020 to 2024. General stable ~760–850K. EV grew from 800 to 13,600.">General segment stable ~760–850K units. EV grew from 800 in 2020 to over 13,000 in 2024.</canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-label">Year-over-year growth (%)</div>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-swatch" style="background:#378ADD"></span>General</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#1D9E75"></span>EV</span>
+      </div>
+      <div class="chart-wrap" style="height:200px">
+        <canvas id="growthChart" role="img" aria-label="Bar chart showing YoY growth rates 2021 to 2024. EV dramatically outpaces General each year.">EV YoY growth: 2021 ~80%, 2022 ~80%, 2023 ~170%, 2024 ~94%. General flat or slightly negative.</canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Brand elasticity tabbed -->
+  <div class="card card-mb">
+    <div class="card-head">
+      <div class="section-label" style="margin:0">Brand elasticity profiles</div>
+      <div class="tab-row" style="margin:0">
+        <button class="tab-btn active" onclick="showTab('price',this)">Price</button>
+        <button class="tab-btn" onclick="showTab('income',this)">Income</button>
+      </div>
+    </div>
+    <div id="tab-price">
+      <div class="legend">
+        <span class="legend-item"><span class="legend-swatch" style="background:#378ADD"></span>General</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#1D9E75"></span>EV</span>
+      </div>
+      <div class="chart-wrap" style="height:260px">
+        <canvas id="priceChart" role="img" aria-label="Horizontal bar chart of price elasticity by brand. GWM 0.877, Toyota 0.772 are highest.">GWM 0.877, Toyota 0.772, MG 0.741, Honda 0.705, NETA 0.698, Isuzu 0.622, BYD 0.611, Tesla 0.558.</canvas>
+      </div>
+    </div>
+    <div id="tab-income" style="display:none">
+      <div class="legend">
+        <span class="legend-item"><span class="legend-swatch" style="background:#1D9E75"></span>Normal good (&gt;0)</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#D85A30"></span>Inferior good (&lt;0)</span>
+      </div>
+      <div class="chart-wrap" style="height:260px">
+        <canvas id="incomeChart" role="img" aria-label="Horizontal bar chart of income elasticity by brand. Tesla 1.82, BYD 1.65 are highest.">Tesla 1.82, BYD 1.65, Honda 1.41, GWM 1.33, Toyota 1.20, MG 1.10, NETA 0.95, Isuzu 0.72.</canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Market share -->
+  <div class="card card-mb">
+    <div class="section-label">Market share 2024 · all brands</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; align-items:center;">
+      <div>
+        <table class="brand-table">
+          <thead><tr><th>Brand</th><th>Segment</th><th>Share</th></tr></thead>
+          <tbody id="brandTbody"></tbody>
+        </table>
+      </div>
+      <div class="chart-wrap" style="height:260px">
+        <canvas id="shareChart" role="img" aria-label="Doughnut chart of 2024 market share. Toyota 29.5%, Isuzu 24.6%, BYD 8.8%.">Toyota 29.5%, Isuzu 24.6%, BYD 8.8%, Honda 8.2%, MG 5.9%, GWM 5.3%, others 17.7%.</canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key drivers -->
+  <div class="card card-mb">
+    <div class="section-label">Key drivers of EV adoption · Random Forest importance scores</div>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-swatch" style="background:#534AB7"></span>Infrastructure</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:#378ADD"></span>Macroeconomic</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:#1D9E75"></span>Policy</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:#BA7517"></span>Market</span>
+    </div>
+    <div class="chart-wrap" style="height:190px">
+      <canvas id="driversChart" role="img" aria-label="Horizontal bar chart of feature importances. Charging station density 0.42 is dominant.">Charging station density 0.42, GDP growth 0.21, Household debt 0.15, Subsidy level 0.13, Fuel price ratio 0.06, Localization ratio 0.03.</canvas>
+    </div>
+  </div>
+
+  <!-- Insight cards -->
+  <div class="insight-grid">
+    <div class="insight-card">
+      <div class="insight-header">
+        <div class="insight-icon" style="background:var(--teal-light)">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#1D9E75" stroke-width="1.5"/><path d="M5 8.5l2 2 4-4" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="insight-label">Structural transition</span>
+      </div>
+      <p class="insight-body">Legacy brands hold volume but all growth momentum sits in EV. The market is pivoting from ICE dominance to electrification driven by policy, not cost-optimization.</p>
+    </div>
+    <div class="insight-card">
+      <div class="insight-header">
+        <div class="insight-icon" style="background:var(--blue-light)">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="10" width="3" height="4" rx="1" fill="#378ADD"/><rect x="6.5" y="6" width="3" height="8" rx="1" fill="#378ADD"/><rect x="11" y="2" width="3" height="12" rx="1" fill="#378ADD"/></svg>
+        </div>
+        <span class="insight-label">Infrastructure is the catalyst</span>
+      </div>
+      <p class="insight-body">Charging station density (importance 0.42) is the strongest predictor — far exceeding fuel price ratio. Range anxiety outweighs marginal savings from lower running costs.</p>
+    </div>
+    <div class="insight-card">
+      <div class="insight-header">
+        <div class="insight-icon" style="background:var(--amber-light)">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 3v3.5M8 9.5V10" stroke="#BA7517" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="8" r="6.5" stroke="#BA7517" stroke-width="1.5"/></svg>
+        </div>
+        <span class="insight-label">Macro sensitivity</span>
+      </div>
+      <p class="insight-body">GDP growth and household debt (91.5% of GDP) carry high model coefficients — Thai vehicle demand is far more sensitive to economic health and credit conditions than operating costs.</p>
+    </div>
+    <div class="insight-card">
+      <div class="insight-header">
+        <div class="insight-icon" style="background:var(--pink-light)">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M4 12l4-8 4 8" stroke="#993556" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 9h5" stroke="#993556" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <span class="insight-label">Segment stickiness</span>
+      </div>
+      <p class="insight-body">The EV dummy variable showed the highest OLS significance — adoption is driven by segment preference (early adopters, subsidy recipients) not rational fuel-cost optimization.</p>
+    </div>
+  </div>
+
+  <!-- Policy recommendations -->
+  <div class="card card-mb">
+    <div class="section-label">Policy recommendations</div>
+    <ul class="policy-list">
+      <li class="policy-item">
+        <span class="policy-num">01</span>
+        <div>
+          <div class="policy-title">Prioritize infrastructure over operating subsidies</div>
+          <div class="policy-desc">Government spending yields higher ROI if directed toward expanding the national charging grid — especially secondary cities — rather than subsidizing fuel or electricity costs. <span class="pill pill-teal">High impact</span></div>
+        </div>
+      </li>
+      <li class="policy-item">
+        <span class="policy-num">02</span>
+        <div>
+          <div class="policy-title">Green auto loans with subsidized interest rates</div>
+          <div class="policy-desc">Leasing flat rates and household debt are high-impact variables. Green Auto Loans with lower rates for EVs could mitigate debt headwinds and make EVs accessible to the middle class. <span class="pill pill-blue">Macro lever</span></div>
+        </div>
+      </li>
+      <li class="policy-item">
+        <span class="policy-num">03</span>
+        <div>
+          <div class="policy-title">Target subsidies at elastic brands — GWM and Toyota</div>
+          <div class="policy-desc">Demand-side subsidies (EV 3.5 package) are most effective on mass-market elastic brands. Luxury segments like Tesla show lower elasticity — subsidies there drive less total volume. <span class="pill pill-amber">Targeting</span></div>
+        </div>
+      </li>
+      <li class="policy-item">
+        <span class="policy-num">04</span>
+        <div>
+          <div class="policy-title">Standardize EV insurance frameworks</div>
+          <div class="policy-desc">EV premiums run 20–40% above ICE, acting as a hidden friction cost. A state-backed insurance pool or standardized battery repair costs could meaningfully lower total cost of ownership. <span class="pill pill-coral">TCO friction</span></div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="footer">Thai Automotive Industry Analysis · Chalita · Final Project · Data: simulated DLT registrations + NESDC macro indicators (2020–2024)</div>
+
+</main>
+
+<script>
+const years = [2020,2021,2022,2023,2024];
+
+new Chart(document.getElementById('regChart'), {
+  type:'line',
+  data:{ labels: years, datasets:[
+    { label:'General', data:[791146,758319,848188,774980,798800], borderColor:'#378ADD', backgroundColor:'rgba(55,138,221,0.07)', fill:true, tension:0.35, pointRadius:4, pointBackgroundColor:'#378ADD' },
+    { label:'EV', data:[800,1440,2592,6998,13600], borderColor:'#1D9E75', backgroundColor:'rgba(29,158,117,0.07)', fill:true, tension:0.35, pointRadius:4, pointBackgroundColor:'#1D9E75' }
+  ]},
+  options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } }, scales:{
+    x:{ grid:{ color:'rgba(128,128,128,0.12)' }, ticks:{ font:{size:11} } },
+    y:{ grid:{ color:'rgba(128,128,128,0.12)' }, ticks:{ font:{size:11}, callback: v => v>=1000?(v/1000).toFixed(0)+'K':v } }
+  }}
+});
+
+new Chart(document.getElementById('growthChart'), {
+  type:'bar',
+  data:{ labels:[2021,2022,2023,2024], datasets:[
+    { label:'General', data:[-4.2,11.8,-8.6,3.1], backgroundColor:'rgba(55,138,221,0.75)', borderRadius:3 },
+    { label:'EV', data:[80,80,170,94], backgroundColor:'rgba(29,158,117,0.75)', borderRadius:3 }
+  ]},
+  options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } }, scales:{
+    x:{ grid:{ display:false }, ticks:{ font:{size:11} } },
+    y:{ grid:{ color:'rgba(128,128,128,0.12)' }, ticks:{ font:{size:11}, callback: v=>v+'%' } }
+  }}
+});
+
+new Chart(document.getElementById('priceChart'), {
+  type:'bar',
+  data:{ labels:['GWM','Toyota','MG','Honda','NETA','Isuzu','BYD','Tesla'],
+         datasets:[{ data:[0.877,0.772,0.741,0.705,0.698,0.622,0.611,0.558],
+           backgroundColor:['#1D9E75','#378ADD','#1D9E75','#378ADD','#1D9E75','#378ADD','#1D9E75','#1D9E75'].map(c=>c+'cc'),
+           borderRadius:3 }]},
+  options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } }, scales:{
+    x:{ grid:{ color:'rgba(128,128,128,0.12)' }, ticks:{ font:{size:11} }, min:0, max:1 },
+    y:{ grid:{ display:false }, ticks:{ font:{size:11} } }
+  }}
+});
+
+new Chart(document.getElementById('incomeChart'), {
+  type:'bar',
+  data:{ labels:['Tesla','BYD','Honda','GWM','Toyota','MG','NETA','Isuzu'],
+         datasets:[{ data:[1.82,1.65,1.41,1.33,1.20,1.10,0.95,0.72],
+           backgroundColor:[1.82,1.65,1.41,1.33,1.20,1.10,0.95,0.72].map(v=>v>=0?'rgba(29,158,117,0.8)':'rgba(216,90,48,0.8)'),
+           borderRadius:3 }]},
+  options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } }, scales:{
+    x:{ grid:{ color:'rgba(128,128,128,0.12)' }, ticks:{ font:{size:11} } },
+    y:{ grid:{ display:false }, ticks:{ font:{size:11} } }
+  }}
+});
+
+const brands = [
+  {name:'Toyota', seg:'General', share:29.5, color:'#378ADD'},
+  {name:'Isuzu',  seg:'General', share:24.6, color:'#185FA5'},
+  {name:'BYD',   seg:'EV',      share:8.8,  color:'#1D9E75'},
+  {name:'Honda', seg:'General', share:8.2,  color:'#85B7EB'},
+  {name:'MG',    seg:'EV',      share:5.9,  color:'#5DCAA5'},
+  {name:'GWM',   seg:'EV',      share:5.3,  color:'#0F6E56'},
+  {name:'Tesla', seg:'EV',      share:3.5,  color:'#63BC8A'},
+  {name:'NETA',  seg:'EV',      share:2.1,  color:'#9FE1CB'},
+  {name:'Others',seg:'—',       share:12.1, color:'#D3D1C7'},
+];
+const tbody = document.getElementById('brandTbody');
+brands.forEach(b => {
+  const tr = document.createElement('tr');
+  const bgC = b.seg==='EV'?'#E1F5EE': b.seg==='—'?'#F1EFE8':'#E6F1FB';
+  const txC = b.seg==='EV'?'#0F6E56': b.seg==='—'?'#5F5E5A':'#185FA5';
+  tr.innerHTML = `<td>${b.name}</td><td><span class="seg-badge" style="background:${bgC};color:${txC}">${b.seg}</span></td><td>${b.share}%<span class="bar-inline" style="width:${Math.round(b.share*2.2)}px;background:${b.color}"></span></td>`;
+  tbody.appendChild(tr);
+});
+
+new Chart(document.getElementById('shareChart'), {
+  type:'doughnut',
+  data:{ labels: brands.map(b=>b.name), datasets:[{ data: brands.map(b=>b.share), backgroundColor: brands.map(b=>b.color), borderWidth:1.5, borderColor:'#ffffff' }]},
+  options:{ responsive:true, maintainAspectRatio:false, cutout:'56%', plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label: ctx=>ctx.label+': '+ctx.parsed.toFixed(1)+'%' } } }}
+});
+
+new Chart(document.getElementById('driversChart'), {
+  type:'bar',
+  data:{ labels:['Charging station density','GDP growth','Household debt','Subsidy level','Fuel price ratio','Localization ratio'],
+         datasets:[{ data:[0.42,0.21,0.15,0.13,0.06,0.03],
+           backgroundColor:['#534AB7','#378ADD','#378ADD','#1D9E75','#BA7517','#BA7517'],
+           borderRadius:3 }]},
+  options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label: ctx=>'Importance: '+ctx.parsed.x.toFixed(2) } } }, scales:{
+    x:{ grid:{ color:'rgba(128,128,128,0.12)' }, ticks:{ font:{size:11} }, max:0.5 },
+    y:{ grid:{ display:false }, ticks:{ font:{size:11} } }
+  }}
+});
+
+function showTab(tab, btn) {
+  document.getElementById('tab-price').style.display = tab==='price' ? '' : 'none';
+  document.getElementById('tab-income').style.display = tab==='income' ? '' : 'none';
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
